@@ -3,6 +3,20 @@ class ArticlesController < ApplicationController
   # find record before action is executed
   before_action :find_article, only: [ :update, :destroy ]
 
+  # return a list of all articles
+  # GET /edukasi
+  def index
+    articles = Article.select(:id, :title, :picture, :created_at).paginate(:page => params[:page], :per_page => 10) 
+    render json: articles, status: :ok
+  end
+
+  # return detail of an article record
+  # GET /edukasi/:id
+  def show
+    article = Article.find(params[:id])
+    render json: article, status: :ok
+  end
+
   # create a new article record
   # POST /edukasi
   def create
