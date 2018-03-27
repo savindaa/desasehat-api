@@ -34,13 +34,13 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'rack-cors'
 
 # Use Carrierwave for upload image
-# gem 'carrierwave', '~> 1.2', '>= 1.2.2'
+gem 'carrierwave-base64', '~> 2.6', '>= 2.6.1'
 
 # Use versionist for API versioning
 # gem 'versionist', '~> 1.7'
 
 # Use pagination
-# gem 'will_paginate', '~> 3.1', '>= 3.1.6'
+gem 'will_paginate', '~> 3.1', '>= 3.1.6'
 
 # Allow for configuring JSON
 gem 'active_model_serializers', '~> 0.10.7'
