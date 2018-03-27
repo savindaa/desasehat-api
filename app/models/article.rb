@@ -1,5 +1,8 @@
 class Article < ApplicationRecord
 
+  # image uploader
+  mount_base64_uploader :picture, PictureUploader
+
   # model Association
   belongs_to :admin
 
