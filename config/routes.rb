@@ -13,4 +13,7 @@ Rails.application.routes.draw do
 
   get 'penduduk/:id', to: "residents#show"
 
+  post 'admin/login', to: 'authentication#authenticate_admin'
+  get 'admin/do', to: 'authorize_request#authorize'
+
 end
