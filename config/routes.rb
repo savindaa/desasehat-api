@@ -3,4 +3,7 @@ Rails.application.routes.draw do
 
   resources :villages, path: "desa"
 
+  post 'admin/login', to: 'authentication#authenticate_admin'
+  get 'admin/do', to: 'authorize_request#authorize'
+
 end
