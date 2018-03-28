@@ -4,6 +4,7 @@ class CreatePatients < ActiveRecord::Migration[5.1]
       t.string :name, null: false
       t.text :address
       t.string :phone
+      t.string :pob
       t.date :dob
       t.string :gender
       t.string :blood_type

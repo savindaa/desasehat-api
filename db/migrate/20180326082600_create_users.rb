@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :nik
       t.string :email
       t.string :user_job
+      t.string :picture
       t.integer :role, null: false
       t.integer :otp, limit: 4
       t.references :village, foreign_key: true
