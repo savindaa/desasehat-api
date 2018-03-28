@@ -1,0 +1,5 @@
+class AuthorizeRequestController < ApplicationController
+
+
+
+end
