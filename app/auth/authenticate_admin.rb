@@ -6,14 +6,14 @@ class AuthenticateAdmin
 
   # Service entry point
   def call
-    JsonWebToken.encode(admin_id: admin.id) if user
+    JsonWebToken.encode(admin_id: admin.id) if admin
   end
 
   private
 
   attr_reader :username, :password
 
-  # verify user credentials
+  # verify admin user credentials
   def admin
     admin = Admin.find_by(username: username)
     return admin if admin && admin.authenticate(password)

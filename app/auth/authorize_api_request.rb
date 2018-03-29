@@ -1,15 +1,13 @@
 class AuthorizeApiRequest
   def initialize(headers = {})
-    puts headers
     @headers = headers
   end
 
   # Service entry point - return valid user object
   def call
-    # {
-    #   user: user
-    # }
-    user
+    {
+      user: user
+    }
   end
 
   private
@@ -17,16 +15,14 @@ class AuthorizeApiRequest
   attr_reader :headers
 
   def user
-    # check if admin is in the database
-    # memoize admin object
-    @user ||= Admin.find(decoded_auth_token[:admin_id]) if decoded_auth_token
+    # check if admin/user is in the database
+    # memoize admin/user object
+    @user ||= Admin.find(decoded_auth_token[:admin_id]) if decoded_auth_token[:admin_id]
+    # @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token[:user_id]
     # handle user not found
   rescue ActiveRecord::RecordNotFound => e
     raise custom error
-    raise(
-      ExceptionHandler::InvalidToken,
-      ("#{Message.invalid_token} #{e.message}")
-    )
+    raise(ExceptionHandler::InvalidToken, ("#{Message.invalid_token} #{e.message}"))
   end
 
   # decode authentication token
