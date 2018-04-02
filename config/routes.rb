@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  root "patients#index"
+  root "patients#dashboard"
 
   resources :articles, path: '/edukasi'
 
@@ -9,8 +9,8 @@ Rails.application.routes.draw do
 
   resources :patients, path: "/pasien"
 
-  get 'resident/update', to: "residents#update_log"
+  get 'penduduk/update', to: "residents#update_log"
 
-  get 'resident/:id', to: "residents#show"
+  get 'penduduk/:id', to: "residents#show"
 
 end
