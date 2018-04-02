@@ -1,11 +1,7 @@
 class VillagesController < ApplicationController
 
-  # super admin only
-  before_action :auth_super_admin, only: [ :create, :update, :destroy ]
   # find record before action is executed
   before_action :find_village, only: [ :show, :update, :destroy ]
-
-  skip_before_action :authorize_request, only: [ :index, :show ]
 
   # return list of all villages
   # GET /desa
