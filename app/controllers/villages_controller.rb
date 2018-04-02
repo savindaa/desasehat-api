@@ -7,7 +7,7 @@ class VillagesController < ApplicationController
   # GET /desa
   def index
     villages = Village.all.paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: villages, status: :ok, fields: [ :id, :name, :kecamatan, :kabupaten, :provinsi ]
+    render json: villages.as_json(only: [ :id, :name, :kecamatan, :kabupaten, :provinsi ]), status: :ok
   end
 
   # return detail of a village record

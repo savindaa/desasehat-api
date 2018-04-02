@@ -4,9 +4,9 @@ class Resident < ApplicationRecord
   belongs_to :village
 
   # model Validation
-  validates :date, :type, :total, presence: true
+  validates :input_date, :input_type, :total, presence: true
 
   # enum on type
-  enum type: [ :penduduk_sehat, :penduduk_sakit ]
+  enum input_type: [ :jumlah_penduduk, :penduduk_sakit ]
 
 end

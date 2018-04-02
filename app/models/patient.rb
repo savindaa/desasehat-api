@@ -16,10 +16,6 @@ class Patient < ApplicationRecord
     ((Time.zone.now - self[:dob].to_time) / 1.year.seconds).floor
   end
 
-  def created_at
-    self[:created_at].strftime "%d-%m-%Y"
-  end
-
   def user_id
     {
       id: self.user.id,

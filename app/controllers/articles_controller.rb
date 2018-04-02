@@ -7,7 +7,7 @@ class ArticlesController < ApplicationController
   # GET /edukasi
   def index
     articles = Article.all.paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: articles, status: :ok, fields: [ :id, :title, :picture, :created_at ]
+    render json: articles.as_json(only: [ :id, :title, :picture, :created_at ]), status: :ok 
   end
 
   # return detail of an article record
