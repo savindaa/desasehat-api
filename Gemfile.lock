@@ -59,6 +59,7 @@ GEM
       activesupport (>= 4.2.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    jsonapi-renderer (0.2.0)
     jwt (2.1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -140,9 +141,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   byebug
   carrierwave-base64 (~> 2.6, >= 2.6.1)
-  faker
   jwt (~> 2.1)
-  faker
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   puma (~> 3.7)
