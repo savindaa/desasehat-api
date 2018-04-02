@@ -10,4 +10,12 @@ class Article < ApplicationRecord
   validates :title, presence: true
   validates :content, presence: true
 
+  def admin_id
+    {
+      id: self.admin.id,
+      name: self.admin.name
+    }
+
+  end
+
 end
