@@ -2,79 +2,61 @@ class ResidentsController < ApplicationController
 
   skip_before_action :authorize_request
 
- def update_log
-   patients = Patient.where(status: "accepted", village_id: 1)
-   patients.select(:disease_type).distinct.each do |data|
-     disease_type = data.disease_type
-     sick_resident = patients.where(disease_type: disease_type).size
-     log = Resident.where(disease_type: disease_type, input_date: Date.today.beginning_of_month)
-     if log.blank?
-       Resident.create!(
-         input_date: Date.today.beginning_of_month,
-         input_type: "penduduk_sakit",
-         disease_type: disease_type,
-         total: sick_resident,
-         village_id: 1
-       )
-     elsif log[0].total != sick_resident
-       log.update(total: sick_resident)
-     end
-   end
- end
+  def show
+    @date_log = Date.new( date_year, date_month ).end_of_month
+    patients = Patient.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).where(status: "accepted")
+    unless patients.blank?
+      log = {
+        village_detail: patients.first.village_id,
+        date: "#{I18n.l(@date_log, format: :short)}",
+        total_resident: total_resident,
+        total_sick_residents: patients.size,
+        sick_residents_detail: []
+      }
 
- def show
-   limit = (params[:limit] || 12).to_i
-   @residents = Resident.where("village_id = ?", params[:id])
-   unless @residents.blank?
-   log = {}
-   log[:village] = @residents.first.village_id
-   log[:log] = []
+      patients.select(:disease_type).distinct.each do |data|
+        current_log = {
+          disease_type: data.disease_type,
+          name: patients.where(disease_type: data.disease_type).size
+        }
+        log[:sick_residents_detail].push(current_log)
+      end
 
-   @residents.select(:input_date).distinct.order(input_date: :desc).limit(limit).each do |r|
-     current_log = {}
-     current_log[:date] = r.input_date.strftime "%m-%Y"
-
-     if update_total_resident
-       current_log[:total_residents] = @residents.find_by(input_date: r.input_date, input_type: "jumlah_penduduk").total
-     else
-       current_log[:total_residents] = nil
-     end
-
-     current_log[:total_sick_resident] = 0
-     current_log[:sick_resident_detail] = []
-
-     @residents.where(input_date: r.input_date, input_type: "penduduk_sakit").each do |q|
-       current_log[:total_sick_resident] += q.total
-       current_log[:sick_resident_detail].push(disease_type: q.disease_type, total: q.total)
-     end
-
-     log[:log].push(current_log)
-   end
-
-   render json: log, status: :ok
-
-  else
-    render json: { message: "Record is Empty" }, status: :ok
+      render json: log, status: :ok
+    else
+      raise ActiveRecord::RecordNotFound, "Data tidak ditemukan"
+    end
   end
- rescue ActiveRecord::StatementInvalid
-   raise ExceptionHandler::StatementInvalid, "Statement Invalid"
- end
 
- def update_total_resident
-   this_month = Date.today.beginning_of_month
-   total_residents = @residents.where(input_type: "jumlah_penduduk")
-   unless total_residents.blank?
-     total_current_resident = total_residents.find_by(input_date: this_month)
-     if total_current_resident.blank?
-       total_previous_resident = total_residents.find_by(input_date: this_month >> -1)
-       Resident.create(input_date: this_month, input_type: "jumlah_penduduk", total: total_previous_resident.total, village_id: total_previous_resident.village_id[:id])
-       return true
-     else
-       return true
-     end
-   else
-     return false
-   end
- end
+  private
+
+  def date_year
+    unless params[:tahun].blank?
+      if params[:tahun].to_i >= 2000
+        params[:tahun].to_i
+      else
+        raise ExceptionHandler::InvalidDate, "Parameter tahun harus lebih dari tahun 2000"
+      end
+    else
+      Date.today.year
+    end
+  end
+
+  def date_month
+    unless params[:bulan].blank?
+      if params[:bulan].to_i > 0 && params[:bulan].to_i < 13
+        params[:bulan].to_i
+      else
+        raise ExceptionHandler::InvalidDate, "Parameter bulan salah"
+      end
+    else
+      Date.today.month
+    end
+  end
+
+  def total_resident
+    people_count = TotalResident.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).last
+    people_count.blank? ? 0 : people_count.total
+  end
 
 end
