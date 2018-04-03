@@ -1,15 +1,15 @@
 # This file is a template, and might need editing before it works on your project.
 # Official language image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/ruby/tags/
-image: "ruby:2.4"
+image: "ruby:2.4.3"
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
-services:
-  - mysql:latest
-  - redis:latest
-  - postgres:latest
+# services:
+#   - mysql:latest
+#   - redis:latest
+#   - postgres:latest
 
 variables:
   POSTGRES_DB: database_name
@@ -29,9 +29,9 @@ before_script:
   - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
 
 # Optional - Delete if not using `rubocop`
-rubocop:
-  script:
-  - rubocop
+# rubocop:
+#   script:
+#   - rubocop
 
 rspec:
   script:
@@ -39,7 +39,7 @@ rspec:
 
 rails:
   variables:
-    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+    DATABASE_URL: "postgres://ljjaeqmcpuymib:192b76565409caec6c6e75ee0cb226af20e2ed06d0e253389f3bf2d885801c16@ec2-54-243-63-13.compute-1.amazonaws.com:5432/d99f5easv4gus3"
   script:
   - rails db:migrate
   - rails db:seed
@@ -52,4 +52,4 @@ deploy:
   environment: production
   script:
   - gem install dpl
-  - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_PRODUCTION_KEY
+  - dpl --provider=heroku --app=desasehat-api --api-key=86627d609d55625527df962e77fa7d79479931dd6866e56014ebc80b2ade5f8f0d9a3ab7490bf29528e112029fd2fa91dc92d7e3bd199bfa15370b4667a87121
