@@ -19,9 +19,9 @@ class AuthorizeApiRequest
     # memoize admin/user object
     @user ||= Admin.find(decoded_auth_token[:admin_id]) if decoded_auth_token[:admin_id]
     @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token[:user_id]
+    return @user
     # handle user not found
   rescue ActiveRecord::RecordNotFound => e
-    raise custom error
     raise(ExceptionHandler::InvalidToken, ("#{Message.invalid_token} #{e.message}"))
   end
 

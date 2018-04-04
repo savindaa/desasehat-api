@@ -28,6 +28,6 @@ class Message
   end
 
   def self.otp_not_match
-    'OTP code not match.'
+    'OTP code does not match.'
   end
 end

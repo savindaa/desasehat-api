@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
   end
 
   def auth_admin_edukasi
-    unless role == "admin_edukasi"
+    unless role == "super_admin" || role == "admin_edukasi"
     raise ExceptionHandler::AuthenticationError, Message.unauthorized
     end
   end

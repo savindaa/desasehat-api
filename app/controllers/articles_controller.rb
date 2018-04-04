@@ -18,7 +18,7 @@ class ArticlesController < ApplicationController
   # return detail of an article record
   # GET /edukasi/:id
   def show
-    render json: @article.as_json(only: [:id, :title, :picture, :content, :created_at, :created_by])
+    render json: @article.as_json(only: [:id, :title, :picture, :content, :created_at, :admin_id])
   end
 
   # create a new article record
