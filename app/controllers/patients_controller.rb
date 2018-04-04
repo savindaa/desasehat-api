@@ -12,9 +12,9 @@ class PatientsController < ApplicationController
     render json: @patient, status: :ok
   end
 
-  def dashboard
-    patients = Patient.where(status: "accepted").paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: patients.as_json(only: [:id, :disease_type, :name, :age, :village_id]), status: :ok
-  end
+  # def dashboard
+  #   patients = Patient.where(status: "accepted").paginate(page: params[:page], per_page: params[:limit] || 10)
+  #   render json: patients.as_json(only: [:id, :disease_type, :name, :age, :village_id]), status: :ok
+  # end
 
 end
