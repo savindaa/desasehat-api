@@ -17,7 +17,7 @@ class ResidentsController < ApplicationController
       patients.select(:disease_type).distinct.each do |data|
         current_log = {
           disease_type: data.disease_type,
-          name: patients.where(disease_type: data.disease_type).size
+          total: patients.where(disease_type: data.disease_type).size
         }
         log[:sick_residents_detail].push(current_log)
       end
