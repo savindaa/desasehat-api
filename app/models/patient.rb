@@ -8,7 +8,7 @@ class Patient < ApplicationRecord
   validates :name, :dob, :gender, :disease_type, :status, :blood_type, presence: true
 
   # enum on status
-  enum status: [ :draft, :pending, :accepted, :declined, :cured, :deleted ]
+  enum status: [ :draft, :pending, :accepted, :declined, :cured ]
 
   attribute :age
 
@@ -34,6 +34,6 @@ class Patient < ApplicationRecord
   end
 
   def dob
-    self[:dob].strftime "%d-%m-%Y"
+    self[:dob].strftime "%d-%m-%Y" unless self[:dob].blank?
   end
 end
