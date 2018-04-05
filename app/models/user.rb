@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
     # model Validation
     validates :phone, presence: true,
-                      uniqueness: true, unless: Proc.new { |b| b.phone.blank? }
+                      uniqueness: true, case_sensitive: false
     validates :name, presence: true
     validates :role, presence: true
     validates :gender, presence: true

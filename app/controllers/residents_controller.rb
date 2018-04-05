@@ -14,7 +14,7 @@ class ResidentsController < ApplicationController
         sick_residents_detail: []
       }
 
-      patients.select(:disease_type).distinct.each do |data|
+      patients.select(:disease_type).distinct.map do |data|
         current_log = {
           disease_type: data.disease_type,
           total: patients.where(disease_type: data.disease_type).size

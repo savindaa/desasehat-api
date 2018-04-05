@@ -8,7 +8,7 @@ class Admin < ApplicationRecord
 
   # model Validation
   validates :username, presence: true,
-                       uniqueness: true, unless: Proc.new { |b| b.username.blank? }
+                       uniqueness: true
   validates :password, presence: true,
                        confirmation: true,
                        length: { minimum: 6 }
