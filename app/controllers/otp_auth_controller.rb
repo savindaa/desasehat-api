@@ -10,10 +10,10 @@ class OtpAuthController < ApplicationController
       # generating random 4 digit string number
       otp = 4.times.map{rand(10)}.join
       # store otp result to db
-      user.update(otp: otp)
+      user.verification ? user.verification.update(code: hashing(otp)) : user.verification = Verification.new(code: hashing(otp))
       send_otp(user.phone, otp)
       # return user name if the record exist
-      render json: { user: { id: user.id, name: user.name } }
+      render json: { user: { user_id: user.id, name: user.name } }
     else
     # raise Authentication error if credentials are invalid
     raise(ExceptionHandler::AuthenticationError, Message.user_not_found)
@@ -23,10 +23,10 @@ class OtpAuthController < ApplicationController
   # POST user/verify
   def verify_otp
     user = User.find(otp_params[:user_id])
-    if user.otp == otp_params[:otp]
+    if user.verification[:code] == hashing(otp_params[:otp])
       auth_token = JsonWebToken.encode(user_id: user.id)
       render json: { auth_token: auth_token }
-      user.update(otp: nil)
+      user.verification.destroy
     else
       raise(ExceptionHandler::AuthenticationError, Message.otp_not_match)
     end
@@ -47,4 +47,9 @@ class OtpAuthController < ApplicationController
     link = "https://reguler.zenziva.net/apps/smsapi.php?userkey=#{userkey}&passkey=#{passkey}&nohp=#{phone}&pesan=Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}%0A%0A"
     @req = URI.parse(link).read
   end
+
+  def hashing(val)
+    Digest::SHA256.hexdigest(val)
+  end
+
 end
