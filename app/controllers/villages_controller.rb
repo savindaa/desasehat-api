@@ -1,68 +1,39 @@
 class VillagesController < ApplicationController
 
-  # super admin only
-  before_action :auth_super_admin, only: [ :create, :update, :destroy ]
   # find record before action is executed
-  before_action :find_village, only: [ :show, :update, :destroy ]
+  before_action :find_village, only: [ :show ]
 
-  skip_before_action :authorize_request, only: [ :index, :show ]
+  skip_before_action :authorize_request
 
   # return list of all villages
   # GET /desa
   def index
     villages = Village.all.paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: villages.as_json(only: [ :id, :name, :kecamatan, :kabupaten, :provinsi ]), status: :ok
+    render json: villages, status: :ok, only: [:id, :kelurahan], methods: [:kecamatan, :kabupaten, :provinsi]
   end
 
   # return detail of a village record
   # GET /desa/:id
   def show
-    render json: @village, status: :ok
+    render json: @village, status: :ok, methods: [:kecamatan, :kabupaten, :provinsi]
   end
 
-  # create a new village record
-  # POST /desa
-  def create
-    village = Village.new(village_params)
-     if village.save
-       render json: village, status: :created
-    else
-       render json: { errors: village.errors }, status: :unprocessable_entity
-    end
-  end
-
-  # update village attribute
-  # PUT /desa/:id
-  def update
-    @village.update(village_params)
-    head :no_content
-  end
-
-  # delete village record
-  # DELETE /desa/:id
-  def destroy
-    @village.destroy
-    head :no_content
-  end
-
-  # # finding village record with parameter provinsi -> kabupaten -> kecamatan
-  # # GET /desa/pilih
-  # def select_village
-  #   if params[:provinsi] && params[:kabupaten] && params[:kecamatan]
-  #     # if provinsi, kabupaten and kecamatan parameter is provided then return list of village name
-  #     render json: Village.where(provinsi: params[:provinsi], kabupaten: params[:kabupaten], kecamatan: params[:kecamatan]).select(:id, :name), status: :ok
-  #
-  #   elsif params[:provinsi] && params[:kabupaten]
-  #     # if provinsi and kabupaten parameter is provided then return list of distinct kecamatan
-  #     render json: Village.where(provinsi: params[:provinsi], kabupaten: params[:kabupaten]).distinct.select(:kecamatan).as_json(except: :id), status: :ok
-  #
-  #   elsif params[:provinsi]
-  #     # if provinsi parameter is provided then return list of distinct kabupaten
-  #     render json: Village.where(provinsi: params[:provinsi]).distinct.select(:kabupaten).as_json(except: :id), status: :ok
-  #
+  # def pick_desa
+  #   if !params[:prov].blank?
+  #     if !params[:kab].blank?
+  #       if !params[:kec].blank?
+  #         subdistricts = Subdistrict.find(params[:kec])
+  #         render json: { provinsi: subdistricts.regency.province.provinsi, kabupaten: subdistricts.regency.kabupaten, kecamatan: subdistricts.kecamatan, list_desa: subdistricts.villages.as_json(only: [:id, :kelurahan]) }, status: :ok
+  #       else
+  #         regency = Regency.find(params[:kab])
+  #         render json: { provinsi: regency.province.provinsi, kabupaten: regency.kabupaten, list_kecamatan: regency.subdistricts.as_json(only: [:id, :kecamatan]) }, status: :ok
+  #       end
+  #     else
+  #       province = Province.find(params[:prov])
+  #       render json: { provinsi: province.provinsi, list_kabupaten: province.regencies.as_json(only: [:id, :kabupaten]) }, status: :ok
+  #     end
   #   else
-  #     # if there is no provinsi parameter provided, return list of distinct provinsi
-  #     render json: Village.distinct.select(:provinsi).as_json(except: :id), status: :ok
+  #     render json: Province.all, only: [:id, :provinsi], status: :ok
   #   end
   # end
 
