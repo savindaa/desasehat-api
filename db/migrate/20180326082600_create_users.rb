@@ -5,12 +5,11 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :name, null: false
       t.string :gender
       t.text :address
-      t.string :nik
+      t.string :pob
+      t.string :dob
       t.string :email
-      t.string :user_job
+      t.string :occupation
       t.string :picture
-      t.integer :role, null: false
-      t.string :otp, limit: 4
       t.references :village, foreign_key: true
 
       t.timestamps

@@ -3,7 +3,6 @@ class CreateArticles < ActiveRecord::Migration[5.1]
     create_table :articles do |t|
       t.string :title
       t.text :content
-      t.string :picture
       t.references :admin, foreign_key: true
 
       t.timestamps

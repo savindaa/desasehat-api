@@ -1,8 +1,14 @@
 class Patient < ApplicationRecord
 
   # model Association
+  has_many :patient_pictures
+
   belongs_to :village
-  belongs_to :user
+  belongs_to :disease_type
+
+  belongs_to :inputted_by, class_name: 'User'
+  belongs_to :validated_by, class_name: 'User', optional: true
+
 
   # model Validation
   validates :name, :dob, :gender, :disease_type, :status, :blood_type, presence: true

@@ -1,10 +1,14 @@
 class Article < ApplicationRecord
 
-  # image uploader
-  mount_base64_uploader :picture, PictureUploader
-
   # model Association
-  belongs_to :admin
+  belongs_to :user
+
+  has_many :article_pictures
+
+  has_many :article_bookmarks
+  has_many :bookmarked_by, through: :article_bookmarks, source: :user
+
+  has_and_belongs_to_many :tags
 
   # model Validation
   validates :title, presence: true
@@ -15,7 +19,6 @@ class Article < ApplicationRecord
       id: self.admin.id,
       name: self.admin.name
     }
-
   end
 
 end
