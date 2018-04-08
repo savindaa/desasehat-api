@@ -9,30 +9,41 @@ class Patient < ApplicationRecord
   belongs_to :inputted_by, class_name: 'User'
   belongs_to :validated_by, class_name: 'User', optional: true
 
+  attr_accessor :pictures
 
   # model Validation
-  validates :name, :dob, :gender, :disease_type, :status, :blood_type, presence: true
+  validates :name, :dob, :gender, :status, :blood_type, presence: true
 
   # enum on status
-  enum status: [ :draft, :pending, :accepted, :declined, :cured ]
+  enum status: [ :pending, :accepted, :declined, :cured ]
 
   attribute :age
+
+  def disease
+    {
+      id: self.disease_type.id,
+      name: self.disease_type.name
+    }
+  end
+
+  def picture
+    if !self.patient_pictures.blank?
+      self.patient_pictures.map do |pict|
+        pict.p
+      end
+    else
+      { url: PictureUploader.default_url }
+    end
+  end
 
   def age
     ((Time.zone.now - self[:dob].to_time) / 1.year.seconds).floor
   end
 
-  def user_id
-    {
-      id: self.user.id,
-      name: self.user.name
-    }
-  end
-
   def village_id
     {
       id: self.village.id,
-      name: self.village.name,
+      kelurahan: self.village.kelurahan,
       kecamatan: self.village.kecamatan,
       kabupaten: self.village.kabupaten,
       provinsi: self.village.provinsi
@@ -41,5 +52,21 @@ class Patient < ApplicationRecord
 
   def dob
     self[:dob].strftime "%d-%m-%Y" unless self[:dob].blank?
+  end
+
+  def inputted_by_id
+    {
+      id: self.inputted_by.id,
+      name: self.inputted_by.name,
+      picture: self.inputted_by.picture
+    }
+  end
+
+  def validated_by_id
+    {
+      id: self.validated_by.id,
+      name: self.validated_by.name,
+      picture: self.validated_by.picture
+    } unless self.validated_by.blank?
   end
 end

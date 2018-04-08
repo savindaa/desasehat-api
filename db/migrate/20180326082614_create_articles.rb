@@ -3,6 +3,8 @@ class CreateArticles < ActiveRecord::Migration[5.1]
     create_table :articles do |t|
       t.string :title
       t.text :content
+      t.string :picture
+      t.integer :status, null: false
       t.bigint :created_by_id
 
       t.timestamps

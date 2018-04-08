@@ -1,5 +1,8 @@
 class User < ApplicationRecord
 
+  # image uploader
+  mount_base64_uploader :picture, PictureUploader
+
   # model Association
   belongs_to :village
 
@@ -28,6 +31,10 @@ class User < ApplicationRecord
 
   def user_privileges
     self.privileges.as_json(only: [:id, :privilege_name])
+  end
+
+  def picture
+    { url: PictureUploader.default_url } if self[:picture].blank?
   end
 
 end

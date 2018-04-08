@@ -1,9 +1,11 @@
 class Article < ApplicationRecord
+  require 'uri'
+
+  # image uploader
+  mount_base64_uploader :picture, PictureUploader
 
   # model Association
-  belongs_to :created_by, class_name: 'User'
-
-  has_many :article_pictures
+  belongs_to :creator, foreign_key: :created_by_id, class_name: 'User'
 
   has_many :article_bookmarks
   has_many :bookmarked_by, through: :article_bookmarks, source: :user
@@ -13,12 +15,18 @@ class Article < ApplicationRecord
   # model Validation
   validates :title, presence: true
   validates :content, presence: true
+  validates :status, presence: true
 
-  def admin_id
+  enum status: [ :pending, :accepted, :declined ]
+
+  def created_by
     {
-      id: self.admin.id,
-      name: self.admin.name
+      id: self.creator.id,
+      name: self.creator.name,
+      picture: self.creator.picture
     }
   end
+
+  attribute :tags
 
 end
