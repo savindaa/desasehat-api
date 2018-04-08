@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_one :verification
   has_many :inputs, foreign_key: :inputted_by_id, class_name: 'Patient'
   has_many :validates, foreign_key: :validated_by_id, class_name: 'Patient'
-  has_many :articles
+  has_many :articles, foreign_key: :created_by_id
 
   # m:m privileges
   has_many :user_privileges

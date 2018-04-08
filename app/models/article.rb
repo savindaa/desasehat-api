@@ -1,7 +1,7 @@
 class Article < ApplicationRecord
 
   # model Association
-  belongs_to :user
+  belongs_to :created_by, class_name: 'User'
 
   has_many :article_pictures
 
