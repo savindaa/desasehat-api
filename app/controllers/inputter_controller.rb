@@ -1,0 +1,51 @@
+class InputterController < ApplicationController
+
+  before_action :inputter?
+
+  def list_disease
+    diseases = DiseaseType.all
+    render json: diseases, only: [ :id, :name ], status: :ok
+  end
+
+  def create_patient
+    patient = @current_user.inputs.new(patient_params.except(:picture))
+    patient.status = "pending"
+    raise(ExceptionHandler::StatementInvalid, "Maksimal upload gambar adalah 3.") if patient_params[:picture].size > 3
+    if patient.save
+      unless patient_params[:picture].blank?
+        patient_params[:picture].map do |pict|
+          patient.patient_pictures.create!(picture: pict)
+        end
+      end
+      render json: patient,
+        status: :created,
+        methods: [ :disease, :picture, :inputted_by, :validated_by ],
+        except: [ :disease_type_id, :validated_by_id, :inputted_by_id, :updated_at ]
+    else
+      render json: { message: patient.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def my_inputted_patient
+    patients = @current_user.inputs.paginate(page: params[:page], per_page: params[:limit] || 10).order(updated_at: :desc)
+    render json: patients, only: [:id, :name, :age, :village_id, :status], methods: [ :disease, :picture ], status: :ok
+  end
+
+  def delete_patient
+    patient = @current_user.inputs.find(params[:id])
+    raise(ExceptionHandler::StatementInvalid, "Tidak bisa menghapus Campaign yang telah divalidasi.") if patient.status == "accepted"
+    patient.destroy
+    head :no_content
+  end
+
+  private
+
+  def inputter?
+    raise(ExceptionHandler::AuthenticationError, Message.unauthorized) if @current_user.privileges.find_by(id: 3).blank?
+  end
+
+  def patient_params
+    params.require(:inputter).permit(:name, :address, :phone, :pob, :dob, :gender, :blood_type, :description, :disease_type_id, :village_id, picture: [])
+  end
+
+end
