@@ -7,8 +7,8 @@ class Article < ApplicationRecord
   # model Association
   belongs_to :creator, foreign_key: :created_by_id, class_name: 'User'
 
-  has_many :article_bookmarks
-  has_many :bookmarked_by, through: :article_bookmarks, source: :user
+  has_many :article_bookmarks, dependent: :destroy
+  has_many :bookmarked_by, through: :article_bookmarks, source: :user, dependent: :destroy
 
   has_and_belongs_to_many :tags
 

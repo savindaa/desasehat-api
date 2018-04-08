@@ -1,15 +1,13 @@
 class Patient < ApplicationRecord
 
   # model Association
-  has_many :patient_pictures
+  has_many :patient_pictures, dependent: :destroy
 
   belongs_to :village
   belongs_to :disease_type
 
-  belongs_to :inputted_by, class_name: 'User'
-  belongs_to :validated_by, class_name: 'User', optional: true
-
-  attr_accessor :pictures
+  belongs_to :inputter, class_name: 'User', foreign_key: :inputted_by_id
+  belongs_to :validator, class_name: 'User', optional: true, foreign_key: :validated_by_id
 
   # model Validation
   validates :name, :dob, :gender, :status, :blood_type, presence: true
@@ -26,11 +24,19 @@ class Patient < ApplicationRecord
     }
   end
 
-  def picture
+  def pictures
     if !self.patient_pictures.blank?
       self.patient_pictures.map do |pict|
-        pict.p
+        pict.picture
       end
+    else
+      { url: PictureUploader.default_url }
+    end
+  end
+
+  def picture
+    if !self.patient_pictures.blank?
+      self.patient_pictures.first.picture
     else
       { url: PictureUploader.default_url }
     end
@@ -54,19 +60,19 @@ class Patient < ApplicationRecord
     self[:dob].strftime "%d-%m-%Y" unless self[:dob].blank?
   end
 
-  def inputted_by_id
+  def inputted_by
     {
-      id: self.inputted_by.id,
-      name: self.inputted_by.name,
-      picture: self.inputted_by.picture
+      id: self.inputter.id,
+      name: self.inputter.name,
+      picture: self.inputter.picture
     }
   end
 
-  def validated_by_id
+  def validated_by
     {
-      id: self.validated_by.id,
-      name: self.validated_by.name,
-      picture: self.validated_by.picture
-    } unless self.validated_by.blank?
+      id: self.validator.id,
+      name: self.validator.name,
+      picture: self.validator.picture
+    } unless self.validator.blank?
   end
 end
