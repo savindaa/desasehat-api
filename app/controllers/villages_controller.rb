@@ -33,12 +33,13 @@ class VillagesController < ApplicationController
         sick_residents_detail: []
       }
 
-      patients.select(:disease_type).distinct.map do |data|
+      DiseaseType.where(main: true).each do |data|
+        total = data.patients.size
         current_log = {
-          disease_type: data.disease_type,
-          total: patients.where(disease_type: data.disease_type).size
+          disease_type: data.name,
+          total: total
         }
-        log[:sick_residents_detail].push(current_log)
+        log[:sick_residents_detail].push(current_log) if total > 0
       end
 
       render json: log, status: :ok
