@@ -1,70 +1,52 @@
 class VillagesController < ApplicationController
 
-  # super admin only
-  before_action :auth_super_admin, only: [ :create, :update, :destroy ]
-  # find record before action is executed
-  before_action :find_village, only: [ :show, :update, :destroy ]
+  skip_before_action :authorize_request
 
-  skip_before_action :authorize_request, only: [ :index, :show ]
-
-  # return list of all villages
-  # GET /desa
-  def index
-    villages = Village.all.paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: villages.as_json(only: [ :id, :name, :kecamatan, :kabupaten, :provinsi ]), status: :ok
-  end
-
-  # return detail of a village record
-  # GET /desa/:id
-  def show
-    render json: @village, status: :ok
-  end
-
-  # create a new village record
-  # POST /desa
-  def create
-    village = Village.new(village_params)
-     if village.save
-       render json: village, status: :created
+  def village_dropdown
+    if !params[:prov].blank?
+      province = Province.find(params[:prov])
+      if !params[:kab].blank?
+        regency = province.regencies.find(params[:kab])
+        if !params[:kec].blank?
+          subdistricts = regency.subdistricts.find(params[:kec])
+          render json: subdistricts.villages, only: [:id, :kelurahan], status: :ok
+        else
+          render json: regency.subdistricts, only: [:id, :kecamatan], status: :ok
+        end
+      else
+        render json: province.regencies, only: [:id, :kabupaten], status: :ok
+      end
     else
-       render json: { errors: village.errors }, status: :unprocessable_entity
+      render json: Province.all, only: [:id, :provinsi], status: :ok
     end
   end
 
-  # update village attribute
-  # PUT /desa/:id
-  def update
-    @village.update(village_params)
-    head :no_content
-  end
+  def village_statistic
+    @date_log = Date.new( date_year, date_month ).end_of_month
+    patients = Patient.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).where(status: "accepted")
+    unless patients.blank?
+      log = {
+        village_detail: patients.first.village_id,
+        date: "#{I18n.l(@date_log, format: :short)}",
+        total_resident: total_resident,
+        total_sick_residents: patients.size,
+        sick_residents_detail: []
+      }
 
-  # delete village record
-  # DELETE /desa/:id
-  def destroy
-    @village.destroy
-    head :no_content
-  end
+      DiseaseType.where(main: true).each do |data|
+        total = data.patients.size
+        current_log = {
+          disease_type: data.name,
+          total: total
+        }
+        log[:sick_residents_detail].push(current_log) if total > 0
+      end
 
-  # # finding village record with parameter provinsi -> kabupaten -> kecamatan
-  # # GET /desa/pilih
-  # def select_village
-  #   if params[:provinsi] && params[:kabupaten] && params[:kecamatan]
-  #     # if provinsi, kabupaten and kecamatan parameter is provided then return list of village name
-  #     render json: Village.where(provinsi: params[:provinsi], kabupaten: params[:kabupaten], kecamatan: params[:kecamatan]).select(:id, :name), status: :ok
-  #
-  #   elsif params[:provinsi] && params[:kabupaten]
-  #     # if provinsi and kabupaten parameter is provided then return list of distinct kecamatan
-  #     render json: Village.where(provinsi: params[:provinsi], kabupaten: params[:kabupaten]).distinct.select(:kecamatan).as_json(except: :id), status: :ok
-  #
-  #   elsif params[:provinsi]
-  #     # if provinsi parameter is provided then return list of distinct kabupaten
-  #     render json: Village.where(provinsi: params[:provinsi]).distinct.select(:kabupaten).as_json(except: :id), status: :ok
-  #
-  #   else
-  #     # if there is no provinsi parameter provided, return list of distinct provinsi
-  #     render json: Village.distinct.select(:provinsi).as_json(except: :id), status: :ok
-  #   end
-  # end
+      render json: log, status: :ok
+    else
+      raise ActiveRecord::RecordNotFound, "Data tidak ditemukan"
+    end
+  end
 
   private
 
@@ -76,6 +58,35 @@ class VillagesController < ApplicationController
   # find village based on :id parameter
   def find_village
     @village = Village.find(params[:id])
+  end
+
+  def date_year
+    unless params[:tahun].blank?
+      if params[:tahun].to_i >= 2000
+        params[:tahun].to_i
+      else
+        raise ExceptionHandler::InvalidDate, "Parameter tahun harus lebih dari tahun 2000"
+      end
+    else
+      Date.today.year
+    end
+  end
+
+  def date_month
+    unless params[:bulan].blank?
+      if params[:bulan].to_i > 0 && params[:bulan].to_i < 13
+        params[:bulan].to_i
+      else
+        raise ExceptionHandler::InvalidDate, "Parameter bulan salah"
+      end
+    else
+      Date.today.month
+    end
+  end
+
+  def total_resident
+    people_count = TotalResident.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).last
+    people_count.blank? ? 0 : people_count.total
   end
 
 end

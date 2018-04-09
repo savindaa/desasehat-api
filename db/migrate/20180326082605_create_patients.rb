@@ -8,15 +8,18 @@ class CreatePatients < ActiveRecord::Migration[5.1]
       t.date :dob
       t.string :gender
       t.string :blood_type
-      t.string :picture
       t.text :description
-      t.string :disease_type
       t.integer :status, null: false
+      t.bigint :disease_type_id
       t.references :village, foreign_key: true
-      t.references :user, foreign_key: true
+      t.bigint :inputted_by_id
+      t.bigint :validated_by_id
 
       t.timestamps
     end
     add_index("patients", "name")
+    add_index("patients", "disease_type_id")
+    add_index("patients", "validated_by_id")
+    add_index("patients", "inputted_by_id")
   end
 end

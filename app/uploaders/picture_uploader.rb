@@ -2,7 +2,6 @@ class PictureUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
-
   # Choose what kind of storage to use for this uploader:
   storage :file
   # storage :fog
@@ -13,6 +12,10 @@ class PictureUploader < CarrierWave::Uploader::Base
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
+  def asset_host
+    ENV['IMAGE_HOST']
+  end
+
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url(*args)
   #   # For Rails 3.1+ asset pipeline compatibility:
@@ -20,6 +23,10 @@ class PictureUploader < CarrierWave::Uploader::Base
   #
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
+
+  def self.default_url
+    ENV['IMAGE_HOST']+"/uploads/default/picture.png"
+  end
 
   # Process files as they are uploaded:
   # process scale: [200, 300]
