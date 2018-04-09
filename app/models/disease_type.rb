@@ -1,5 +1,7 @@
 class DiseaseType < ApplicationRecord
 
-  has_many :patient, dependent: :restrict_with_exception
+  has_many :patients, dependent: :restrict_with_exception
+
+  validates :name, presence: true
 
 end
