@@ -44,7 +44,7 @@ class OtpAuthController < ApplicationController
   def verify_otp
     user = User.find(auth_params[:id])
     if user.verification[:code] == auth_params[:otp]
-      auth_token = JsonWebToken.encode(user_id: user.id)
+      auth_token = JsonWebToken.encode({ user_id: user.id }, 10.years.from_now)
       render json: { auth_token: auth_token }
       user.verification.destroy
     else
