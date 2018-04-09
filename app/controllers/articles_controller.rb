@@ -1,6 +1,7 @@
 class ArticlesController < ApplicationController
 
-  skip_before_action :authorize_request
+  skip_before_action :authorize_request, only: [ :list, :detail, :related_article ]
+  before_action :find_article, only: [ :detail, :add_bookmark ]
 
   # return a list of all articles
   # GET /edukasi
@@ -12,8 +13,28 @@ class ArticlesController < ApplicationController
   # return detail of an article record
   # GET /edukasi/:id
   def detail
-    article = Article.find(params[:id])
-    render json: article, except: [ :updated_at, :created_by_id ], methods: :created_by, status: :ok
+    render json: @article, except: [ :updated_at, :created_by_id ], methods: :created_by, status: :ok
+  end
+
+  def add_bookmark
+    @current_user.bookmarks << @article
+    render json: { message: "Bookmark telah ditambahkan." }
+  end
+
+  def remove_bookmark
+    @current_user.bookmarks.delete(params[:id])
+    render json: { message: "Bookmark telah dihapus." }
+  end
+
+  def list_bookmark
+    articles = @current_user.bookmarks.paginate(page: params[:page], per_page: params[:limit] || 10)
+    render json: articles, only: [ :id, :title, :picture, :created_at, :tags ], methods: :created_by, status: :ok
+  end
+
+  private
+
+  def find_article
+    @article = Article.find(params[:id])
   end
 
 end

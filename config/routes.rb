@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   root "patients#patients_list"
 
+  # dropdown desa
   get "/desa/dropdown", to: "villages#village_dropdown"
   get "/desa/dropdown/:prov", to: "villages#village_dropdown"
   get "/desa/dropdown/:prov/:kab", to: "villages#village_dropdown"
@@ -10,8 +11,11 @@ Rails.application.routes.draw do
   # edukasi API
   get "/edukasi", to: "articles#list"
   get "/edukasi/:id", to: "articles#detail"
+  get "/edukasi/bookmark-simpan/:id", to: "articles#add_bookmark"
+  get "/edukasi/bookmark-hapus/:id", to: "articles#remove_bookmark"
+  get "/edukasi/bookmark-list", to: "articles#list_bookmark"
 
-  #  campaign API
+  # campaign API
   get "/pasien", to: "patients#patients_list"
   get "/pasien/:id", to: "patients#patient_detail"
 
@@ -22,7 +26,6 @@ Rails.application.routes.draw do
   post "user/signup", to: "otp_auth#signup"
 
   # login API
-  post "admin/login", to: "authentication#authenticate_admin"
   post "user/login", to: "otp_auth#login"
   post "user/verify", to: "otp_auth#verify_otp"
   post "user/resend", to: "otp_auth#resend_otp"
@@ -33,7 +36,7 @@ Rails.application.routes.draw do
   get "user/admindesa/list-wewenang", to: "admin_desa#privileges_list"
   put "user/admindesa/update-wewenang/:id", to: "admin_desa#update_privileges"
 
-  # article creator API
+  # article creator API  post "admin/login", to: "authentication#authenticate_admin"
   get "user/creator/list-kategori", to: "article_creator#tags_list"
   post "user/creator/artikel-baru", to: "article_creator#create_article"
   get "user/creator/artikelku", to: "article_creator#my_articles"
@@ -48,5 +51,9 @@ Rails.application.routes.draw do
   get "user/validator/validasi-campaign/:id", to: "validator#validate_patient"
   get "user/validator/tolak-campaign/:id", to: "validator#decline_patient"
   get "user/validator/list-validasi-campaignku", to: "validator#my_validated_patient"
+
+
+  # CMS
+  post "admin/login", to: "authentication#authenticate_admin"
 
 end
