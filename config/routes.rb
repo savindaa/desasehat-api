@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get "/desa/dropdown/:prov/:kab", to: "villages#village_dropdown"
   get "/desa/dropdown/:prov/:kab/:kec", to: "villages#village_dropdown"
 
+  get "/desa/statistik/:id", to: "villages#village_statistic"  
+
   # edukasi API
   get "/edukasi", to: "articles#list"
   get "/edukasi/:id", to: "articles#detail"
@@ -40,6 +42,7 @@ Rails.application.routes.draw do
   get "user/creator/list-kategori", to: "article_creator#tags_list"
   post "user/creator/artikel-baru", to: "article_creator#create_article"
   get "user/creator/artikelku", to: "article_creator#my_articles"
+  delete "user/creator/hapus-artikel", to: "article_creator#delete_article"
 
   # campaign inputter API
   get "user/inputter/list-penyakit", to: "inputter#list_disease"

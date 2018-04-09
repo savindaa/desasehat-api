@@ -31,6 +31,11 @@ class ArticlesController < ApplicationController
     render json: articles, only: [ :id, :title, :picture, :created_at, :tags ], methods: :created_by, status: :ok
   end
 
+  def delete_article
+    @current_user.articles.delete(params[:id])
+    render json: { message: "Artikel telah dihapus." }    
+  end
+
   private
 
   def find_article
