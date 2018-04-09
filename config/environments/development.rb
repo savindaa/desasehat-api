@@ -46,5 +46,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end
 unless Rails.env.production?
-  ENV['HOST'] = 'http://localhost:3000'
+  ENV['IMAGE_HOST'] = 'http://localhost:3000'
 end

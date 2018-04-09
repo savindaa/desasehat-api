@@ -13,7 +13,7 @@ class PictureUploader < CarrierWave::Uploader::Base
   end
 
   def asset_host
-    ENV['HOST']
+    ENV['IMAGE_HOST']
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -25,7 +25,7 @@ class PictureUploader < CarrierWave::Uploader::Base
   # end
 
   def self.default_url
-    ENV['HOST']+"/uploads/default/picture.png"
+    ENV['IMAGE_HOST']+"/uploads/default/picture.png"
   end
 
   # Process files as they are uploaded:
