@@ -24,9 +24,11 @@ class VillagesController < ApplicationController
   def village_statistic
     @date_log = Date.new( date_year, date_month ).end_of_month
     patients = Patient.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).where(status: "accepted")
+    
     unless patients.blank?
       log = {
         village_detail: patients.first.village_id,
+        admin_desa: admin_desa,
         date: "#{I18n.l(@date_log, format: :short)}",
         total_resident: total_resident,
         total_sick_residents: patients.size,
@@ -87,6 +89,11 @@ class VillagesController < ApplicationController
   def total_resident
     people_count = TotalResident.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).last
     people_count.blank? ? 0 : people_count.total
+  end
+
+  def admin_desa
+    admin_desa = Privilege.find(1).users.where("village_id = ?", params[:id]).first
+    admin_desa.blank? ? nil : { name: admin_desa.name, phone: admin_desa.phone }
   end
 
 end
