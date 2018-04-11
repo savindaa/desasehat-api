@@ -1,0 +1,2 @@
+class TotalResidentsController < ApplicationController
+end
