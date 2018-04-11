@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get "/desa/dropdown/:prov/:kab", to: "villages#village_dropdown"
   get "/desa/dropdown/:prov/:kab/:kec", to: "villages#village_dropdown"
 
-  get "/desa/statistik/:id", to: "villages#village_statistic"  
+  get "/desa/statistik/:id", to: "villages#village_statistic"
 
   # edukasi API
   get "/edukasi", to: "articles#list"
@@ -42,7 +42,8 @@ Rails.application.routes.draw do
   get "user/creator/list-kategori", to: "article_creator#tags_list"
   post "user/creator/artikel-baru", to: "article_creator#create_article"
   get "user/creator/artikelku", to: "article_creator#my_articles"
-  delete "user/creator/hapus-artikel", to: "article_creator#delete_article"
+  delete "user/creator/hapus-artikel/:id", to: "article_creator#delete_article"
+  put "user/creator/edit-artikel/:id", to: "article_creator#edit_article"
 
   # campaign inputter API
   get "user/inputter/list-penyakit", to: "inputter#list_disease"
@@ -58,5 +59,13 @@ Rails.application.routes.draw do
 
   # CMS
   post "admin/login", to: "authentication#authenticate_admin"
+  resources :medical_facilities, path: "admin/fasilitas-kesehatan"
+  resources :medical_personnels, path: "admin/tenaga-kesehatan"
+  resources :posts, path: "admin/artikel"
+  resources :users, path: "admin/user"
+  resources :desa, path: "admin/desa"
+  resources :kecamatan, path: "admin/kecamatan"
+  resources :kabupaten, path: "admin/kabupaten"
+  resources :provinsi, path: "admin/provinsi"
 
 end
