@@ -46,4 +46,8 @@ class Message
   def self.su_only
     "Hanya Super Admin yang bisa melakukan tindakan ini."
   end
+  
+  def self.article_accepted
+    "Tidak bisa edit artikel yang sudah diverifikasi."
+  end
 end
