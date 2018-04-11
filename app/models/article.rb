@@ -10,6 +10,8 @@ class Article < ApplicationRecord
   has_many :article_bookmarks, dependent: :destroy
   has_many :bookmarked_by, through: :article_bookmarks, source: :user, dependent: :destroy
 
+  has_one :article_message
+
   has_and_belongs_to_many :tags
 
   # model Validation
@@ -25,6 +27,14 @@ class Article < ApplicationRecord
       name: self.creator.name,
       picture: self.creator.picture
     }
+  end
+
+  def pictures
+    if self[:picture].blank?
+      { url: PictureUploader.default_url } 
+    else
+      { url: self.picture.url } 
+    end
   end
 
   attribute :tags
