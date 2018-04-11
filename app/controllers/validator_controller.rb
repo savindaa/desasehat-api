@@ -38,11 +38,13 @@ class ValidatorController < ApplicationController
       if @current_user.id == @patient.inputted_by_id
         raise ExceptionHandler::StatementInvalid, "Campaign tidak bisa ditolak oleh Anda sendiri."
       else
-        if @patient.status == "declined"
-          raise ExceptionHandler::StatementInvalid, "Campaign telah dtolak sebelumnya."
-        else
+        raise ExceptionHandler::StatementInvalid, "Campaign telah dtolak sebelumnya." if @patient.status == "declined"
+        message = @patient.patient_message.new(message_params)
+        if message.save
           @patient.update(status: "declined", validated_by_id: @current_user.id)
-          render json: { message: "Campaign ditolak."}, status: :ok
+          render json: { message: "Campaign ditolak."}, status: :ok            
+        else
+          render json: { message: message.errors }, status: :unprocessable_entity			
         end
       end
     else
@@ -58,6 +60,10 @@ class ValidatorController < ApplicationController
 
   def find_patient
     @patient = Patient.find(params[:id])
+  end
+
+  def message_params
+    params.require(:validator).permit(:message)
   end
 
 end
