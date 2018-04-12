@@ -1,0 +1,41 @@
+image: "ruby:2.3.3"
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: api-desasehat
+
+cache:
+  paths:
+    - vendor/ruby
+
+stages:
+  - build
+  - deploy
+
+build:
+  variables:
+    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+  stage: build
+  script:
+  - apt-get update && apt install -y -qq nodejs
+  - gem install bundler  --no-ri --no-rdoc
+  - gem install execjs
+  - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+  # - bundle exec rake db:create db:schema:load
+  - bundle exec rake db:migrate
+  - bundle exec rake db:seed
+  - bundle exec rake assets:precompile
+  except:
+    - master
+
+deploy to production:
+  type: deploy
+  stage: deploy
+  environment: production
+  script:
+  - gem install dpl
+  - dpl --provider=heroku --app=api-desasehat --api-key=403ba2b7-03df-41d2-9c09-53f6459dcce4
+  only:
+  - master
