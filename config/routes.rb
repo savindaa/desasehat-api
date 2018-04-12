@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   get "user/admindesa/list-wewenang", to: "admin_desa#privileges_list"
   put "user/admindesa/update-wewenang/:id", to: "admin_desa#update_privileges"
 
-  # article creator API  post "admin/login", to: "authentication#authenticate_admin"
+  # article creator API 
   get "user/creator/list-kategori", to: "article_creator#tags_list"
   post "user/creator/artikel-baru", to: "article_creator#create_article"
   get "user/creator/artikelku", to: "article_creator#my_articles"
@@ -67,5 +67,10 @@ Rails.application.routes.draw do
   resources :kecamatan, path: "admin/kecamatan"
   resources :kabupaten, path: "admin/kabupaten"
   resources :provinsi, path: "admin/provinsi"
-
+  resources :disease_types, path: "admin/jenis-penyakit"
+  resources :privileges, path: "admin/wewenang"
+  resources :tags, path: "admin/kategori-artikel"
+  resources :total_residents, path: "admin/jumlah-penduduk"
+  
+  
 end
