@@ -9,9 +9,9 @@ class InputterController < ApplicationController
 
   def create_patient
     patient = @current_user.inputs.new(patient_params.except(:picture))
+    raise(ExceptionHandler::StatementInvalid, Message.max_upload(3)) if patient_params[:picture].size > 3
     patient.village_id = @current_user.village_id
     patient.status = "pending"
-    raise(ExceptionHandler::StatementInvalid, Message.max_upload(3)) if patient_params[:picture].size > 3
     if patient.save
       unless patient_params[:picture].blank?
         patient_params[:picture].map do |pict|
@@ -28,8 +28,12 @@ class InputterController < ApplicationController
   end
 
   def my_inputted_patient
-    patients = @current_user.inputs.where.not(status: "cured").paginate(page: params[:page], per_page: params[:limit] || 10).order(updated_at: :desc)
-    render json: patients, only: [:id, :name, :age, :village_id, :status], methods: [ :disease, :picture ], status: :ok
+    patients = @current_user.inputs.where.not(status: "cured").
+                            paginate(page: params[:page], per_page: params[:limit] || 10).
+                            order(updated_at: :desc)
+    render json: patients, 
+           only: [:id, :name, :age, :village_id, :status], 
+           methods: [ :disease, :picture ], status: :ok
   end
 
   def delete_patient
@@ -37,6 +41,20 @@ class InputterController < ApplicationController
     raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "cured")
     patient.destroy
     head :no_content
+  end
+
+  def update_patient
+    patient = @current_user.inputs.find(params[:id])
+    if patient.update!(patient_params.except(:picture))
+      unless patient_params[:picture].blank?
+        patient.patient_pictures.destroy_all
+        patient_params[:picture].map do |pict|
+          patient.patient_pictures.create!(picture: pict)
+        end
+      end
+    else
+      render json: { message: patient.errors }, status: :unprocessable_entity
+    end
   end
 
   private

@@ -1,6 +1,8 @@
 class Patient < ApplicationRecord
 
   # model Association
+  has_one :patient_message  
+
   has_many :patient_pictures, dependent: :destroy
 
   belongs_to :village

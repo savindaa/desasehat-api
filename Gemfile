@@ -31,7 +31,7 @@ gem 'jwt', '~> 2.1'
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 # Use Carrierwave for upload image
 gem 'carrierwave-base64', '~> 2.6', '>= 2.6.1'

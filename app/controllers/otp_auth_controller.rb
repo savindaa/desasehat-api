@@ -35,7 +35,8 @@ class OtpAuthController < ApplicationController
 
   # POST user/resend
   def resend_otp
-    user = User.find_by(phone: auth_params[:phone])
+    user = User.find_by!(phone: auth_params[:phone])
+    raise(ExceptionHandler::StatementInvalid, "Tidak ada kode OTP.") if user.verification.blank?
     send_otp(user.phone, user.verification.code)
     render json: { message: "Kode telah dikirim ulang." }, status: :ok
   end
@@ -43,6 +44,7 @@ class OtpAuthController < ApplicationController
   # POST user/verify
   def verify_otp
     user = User.find(auth_params[:id])
+    raise(ExceptionHandler::StatementInvalid, "Tidak ada kode OTP.") if user.verification.blank?
     if user.verification[:code] == auth_params[:otp]
       auth_token = JsonWebToken.encode({ user_id: user.id }, 10.years.from_now)
       render json: { auth_token: auth_token }
