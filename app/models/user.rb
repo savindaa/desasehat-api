@@ -22,9 +22,6 @@ class User < ApplicationRecord
   validates :phone, presence: true,
                     uniqueness: true, case_sensitive: false
   validates :name, presence: true
-  validates :gender, presence: true
-  validates :email, format: { with: EMAIL_REGEX },
-                    allow_blank: true
 
   # scope
   scope :exclude_current_user, ->(user) { where.not(id: user).order(:name) }
