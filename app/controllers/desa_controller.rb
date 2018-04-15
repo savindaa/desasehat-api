@@ -1,4 +1,4 @@
-class DesaController < ApplicationController
+class DesaController < ApiController
 
   # 
   #  Desa/Keluarahan

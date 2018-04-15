@@ -1,4 +1,4 @@
-class KabupatenController < ApplicationController
+class KabupatenController < ApiController
 
   # 
   #  Kabupaten

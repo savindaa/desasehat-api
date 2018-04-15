@@ -1,4 +1,4 @@
-class VillagesController < ApplicationController
+class VillagesController < ApiController
 
   skip_before_action :authorize_request
 

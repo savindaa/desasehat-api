@@ -1,4 +1,4 @@
-class TotalResidentsController < ApplicationController
+class TotalResidentsController < ApiController
 
   before_action :super_admin?
   before_action :find_resident, only: [ :update, :delete ]

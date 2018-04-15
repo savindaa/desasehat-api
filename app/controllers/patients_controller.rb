@@ -1,4 +1,4 @@
-class PatientsController < ApplicationController
+class PatientsController < ApiController
 
   skip_before_action :authorize_request
 

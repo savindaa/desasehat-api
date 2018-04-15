@@ -1,4 +1,4 @@
-class MedicalPersonnelsController < ApplicationController
+class MedicalPersonnelsController < ApiController
 
   before_action :super_admin?
   before_action :find_personnel, only: [ :show, :update, :delete ]

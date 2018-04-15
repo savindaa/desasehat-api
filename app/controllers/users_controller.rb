@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < ApiController
 
   before_action :super_admin?
 	before_action :find_user, only: [ :show, :destroy ]

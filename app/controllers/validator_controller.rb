@@ -1,4 +1,4 @@
-class ValidatorController < ApplicationController
+class ValidatorController < ApiController
 
   before_action :validator?
 

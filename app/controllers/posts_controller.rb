@@ -1,4 +1,4 @@
-class PostsController < ApplicationController
+class PostsController < ApiController
 
   before_action :super_admin?
 	before_action :find_post, only: [ :show, :delete, :validate_post, :decline_post ]

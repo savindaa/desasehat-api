@@ -1,4 +1,4 @@
-class CampaignController < ApplicationController
+class CampaignController < ApiController
 
 	before_action :super_admin?
 	before_action :find_campaign, only: [ :show, :delete ]

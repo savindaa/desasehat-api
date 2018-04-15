@@ -1,4 +1,4 @@
-class InputterController < ApplicationController
+class InputterController < ApiController
 
   before_action :inputter?
 

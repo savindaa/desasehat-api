@@ -1,4 +1,4 @@
-class DiseaseTypesController < ApplicationController
+class DiseaseTypesController < ApiController
 
   before_action :super_admin?
   before_action :find_disease, only: [ :show, :update, :delete ]

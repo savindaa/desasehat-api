@@ -1,4 +1,4 @@
-class MedicalFacilitiesController < ApplicationController
+class MedicalFacilitiesController < ApiController
 
   before_action :super_admin?
   before_action :find_facility, only: [ :show, :update, :delete ]

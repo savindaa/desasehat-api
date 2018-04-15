@@ -1,4 +1,4 @@
-class ArticleCreatorController < ApplicationController
+class ArticleCreatorController < ApiController
 
   before_action :article_creator?
 

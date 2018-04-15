@@ -1,4 +1,4 @@
-class ProvinsiController < ApplicationController
+class ProvinsiController < ApiController
 
 
   # 

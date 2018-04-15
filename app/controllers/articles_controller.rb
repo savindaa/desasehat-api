@@ -1,4 +1,4 @@
-class ArticlesController < ApplicationController
+class ArticlesController < ApiController
 
   skip_before_action :authorize_request, only: [ :list, :detail, :related_article ]
   before_action :find_article, only: [ :detail, :add_bookmark ]

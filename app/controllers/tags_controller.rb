@@ -1,4 +1,4 @@
-class TagsController < ApplicationController
+class TagsController < ApiController
 
   before_action :super_admin?
   before_action :find_tag, only: [ :show, :update, :delete ]

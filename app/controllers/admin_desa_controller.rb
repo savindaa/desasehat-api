@@ -1,4 +1,4 @@
-class AdminDesaController < ApplicationController
+class AdminDesaController < ApiController
 
   before_action :admin_desa?
 
