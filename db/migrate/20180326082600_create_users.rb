@@ -5,6 +5,8 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :name, null: false
       t.text :address
       t.string :picture
+      t.text :bio
+      t.text :weblink
       t.references :village, foreign_key: true
 
       t.timestamps

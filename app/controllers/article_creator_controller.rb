@@ -23,8 +23,11 @@ class ArticleCreatorController < ApiController
   end
 
   def my_articles
-    articles = @current_user.articles.paginate(page: params[:page], per_page: params[:limit] || 10).order(updated_at: :desc)
-    render json: articles, only: [ :id, :title, :created_at, :tags, :status ], methods: :pictures, status: :ok
+    articles = @current_user.articles.paginate(page: params[:page], per_page: params[:limit] || 10)
+                                     .order(updated_at: :desc)
+    render json: articles,
+           only: [ :id, :title, :created_at, :tags, :status ],
+           methods: :pictures, status: :ok
   end
 
   def edit_article

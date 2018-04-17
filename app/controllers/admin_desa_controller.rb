@@ -10,8 +10,8 @@ class AdminDesaController < ApiController
   end
 
   def detail_user
-   user = User.find(params[:id])
-   render json: user, methods: :user_privileges, status: :ok
+    user = User.find(params[:id])
+    render json: user, methods: :user_privileges, status: :ok
   end
 
   def privileges_list
