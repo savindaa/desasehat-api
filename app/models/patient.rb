@@ -95,12 +95,13 @@ class Patient < ApplicationRecord
       return 0
     else
       days_left = (self[:validated_at] + self[:period]) - Date.today
-      days_left < 0 ? return 0 : return days_left
+      days_left = 0 if (days_left < 0)
+      return days_left.to_i
     end
   end
 
   def fund_current
-    self[:fund_current].blank? ? return 0 : return self[:fund_current]
+    return self[:fund_current].blank? ? 0 : self[:fund_current]
   end
 
 end
