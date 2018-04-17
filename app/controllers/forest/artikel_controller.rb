@@ -4,7 +4,7 @@ class Forest::ArtikelController < ForestLiana::ApplicationController
     article_id.map do |article| 
     Article.update(article, status: "accepted")
     end
-    render json: { message: "Artikel telah divalidasi."}
+    render json: { success: "Artikel telah divalidasi."}
   end
 
   def decline_article
@@ -12,7 +12,7 @@ class Forest::ArtikelController < ForestLiana::ApplicationController
 	article_id.map do |article| 
 	Article.update(article, status: "declined")
 	end
-	render json: { message: "Artikel ditolak."}
+	render json: { success: "Artikel ditolak."}
   end
     
 
