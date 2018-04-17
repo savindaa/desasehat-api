@@ -6,14 +6,27 @@ class ArticlesController < ApplicationController
   # return a list of all articles
   # GET /edukasi
   def list
-    articles = Article.where(status: "accepted").paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: articles, only: [ :id, :title, :created_at, :tags ], methods: [ :pictures, :created_by ], status: :ok
+    if params[:search]
+      articles = Article.where(status: "accepted")
+                        .where('lower(title) LIKE ?', "%#{params[:search].downcase}%")
+                        .paginate(page: params[:page], per_page: params[:limit] || 10)
+    else
+      articles = Article.where(status: "accepted")
+                        .paginate(page: params[:page], per_page: params[:limit] || 10)
+    end
+    render json: articles, 
+           only: [ :id, :title, :created_at, :tags ], 
+           methods: [ :pictures, :created_by ], 
+           status: :ok
   end
 
   # return detail of an article record
   # GET /edukasi/:id
   def detail
-    render json: @article, except: [ :updated_at, :created_by_id, :picture ], methods: [ :pictures, :created_by ], status: :ok
+    render json: @article,
+           except: [ :updated_at, :created_by_id, :picture ],
+           methods: [ :pictures, :created_by ],
+           status: :ok
   end
 
   def add_bookmark
@@ -27,8 +40,18 @@ class ArticlesController < ApplicationController
   end
 
   def list_bookmark
-    articles = @current_user.bookmarks.paginate(page: params[:page], per_page: params[:limit] || 10)
-    render json: articles, only: [ :id, :title, :created_at, :tags ], methods: [ :pictures, :created_by ], status: :ok
+    if params[:search]
+      articles = @current_user.bookmarks
+                        .where('lower(title) LIKE ?', "%#{params[:search].downcase}%")
+                        .paginate(page: params[:page], per_page: params[:limit] || 10)
+    else
+      articles = @current_user.bookmarks
+                        .paginate(page: params[:page], per_page: params[:limit] || 10)
+    end
+    render json: articles, 
+           only: [ :id, :title, :created_at, :tags ],
+           methods: [ :pictures, :created_by ],
+           status: :ok
   end
 
   private
