@@ -25,8 +25,9 @@ class OtpAuthController < ApplicationController
       # store otp result to db
       user.verification ? user.verification.update(code: otp) : user.verification = Verification.new(code: otp)
       send_otp(user.phone, otp)
+      privileges = user.privileges.as_json(only: [:id, :name, :su_only])
       # return user name if the record exist
-      render json: { user: { id: user.id, name: user.name, phone: user.phone } }, status: :ok
+      render json: { user: { id: user.id, name: user.name, phone: user.phone }, user_privileges: privileges }, status: :ok
     else
     # raise Authentication error if credentials are invalid
     raise(ExceptionHandler::AuthenticationError, Message.user_not_found)

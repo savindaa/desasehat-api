@@ -12,7 +12,7 @@ class PatientsController < ApplicationController
                         .paginate(page: params[:page], per_page: params[:limit] || 10)
     end
     render json: patients, 
-           only: [:id, :title, :address, :village_id, :fund_current, :fund_goal, :period ],
+           only: [:id, :title, :address, :village_id, :fund_current, :fund_goal, :period, :validated_at ],
            methods: [ :disease, :picture, :validated_by, :donation_status ],
            status: :ok
   end

@@ -33,7 +33,7 @@ class Patient < ApplicationRecord
         pict.picture
       end
     else
-      { url: PictureUploader.default_url }
+      nil
     end
   end
 
@@ -41,7 +41,7 @@ class Patient < ApplicationRecord
     if !self.patient_pictures.blank?
       self.patient_pictures.first.picture
     else
-      { url: PictureUploader.default_url }
+      nil
     end
   end
 
@@ -89,4 +89,18 @@ class Patient < ApplicationRecord
       end
     end
   end
+
+  def period
+    if self[:validated_at].blank? || self[:period].blank?
+      return 0
+    else
+      days_left = (self[:validated_at] + self[:period]) - Date.today
+      days_left < 0 ? return 0 : return days_left
+    end
+  end
+
+  def fund_current
+    self[:fund_current].blank? ? return 0 : return self[:fund_current]
+  end
+
 end

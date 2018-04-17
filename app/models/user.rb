@@ -31,7 +31,7 @@ class User < ApplicationRecord
   end
 
   def picture
-    { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlMNPszBzrblPa1wEIpULUqm9W2tDJpDL6lcz5cr6yZSpBjiVhTw" } if self[:picture].blank?
+    { url: PictureUploader.default_url } if self[:picture].blank?
   end
 
 end

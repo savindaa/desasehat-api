@@ -9,7 +9,6 @@ class CreateDonations < ActiveRecord::Migration[5.1]
       t.text :comment
       t.references :patient, foreign_key: true
       t.integer :status
-      t.string :picture
 
       t.timestamps
     end
