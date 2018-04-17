@@ -45,6 +45,7 @@ class InputterController < ApplicationController
 
   def update_patient
     patient = @current_user.inputs.find(params[:id])
+    raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "cured")    
     if patient.update!(patient_params.except(:picture))
       unless patient_params[:picture].blank?
         patient.patient_pictures.destroy_all
@@ -64,7 +65,7 @@ class InputterController < ApplicationController
   end
 
   def patient_params
-    params.require(:inputter).permit(:name, :address, :phone, :pob, :dob, :gender, :blood_type, :description, :disease_type_id, picture: [])
+    params.require(:inputter).permit(:title, :name, :address, :phone, :pob, :dob, :gender, :blood_type, :description, :fund_goal, :period, :disease_type_id, picture: [])
   end
 
 end

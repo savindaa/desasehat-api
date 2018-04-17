@@ -56,7 +56,7 @@ class OtpAuthController < ApplicationController
   private
 
   def auth_params
-    params.require(:otp_auth).permit(:phone, :id, :otp, :name, :gender, :address, :pob, :dob, :email, :occupation, :village_id)
+    params.require(:otp_auth).permit(:phone, :id, :otp, :name, :address, :village_id)
   end
 
   def send_otp(phone, otp)

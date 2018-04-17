@@ -6,10 +6,6 @@ class ApplicationController < ActionController::API
 
   attr_reader :current_user
 
-  def super_admin?
-    raise(ExceptionHandler::AuthenticationError, Message.unauthorized) unless @current_user.class == Admin
-	end
-
   private
 
   # Check for valid request token and return user
