@@ -1,4 +1,4 @@
-class OtpAuthController < ApiController
+class OtpAuthController < ApplicationController
   require 'open-uri'
 
   skip_before_action :authorize_request

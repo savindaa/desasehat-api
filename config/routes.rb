@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
-  ActiveAdmin.routes(self)
+  namespace :forest do
+    post '/actions/accept-article' => 'artikel#accept_article'
+    post '/actions/decline-article' => 'artikel#decline_article'
+  end
+  
+  mount ForestLiana::Engine => '/forest'
   root "patients#patients_list"
 
   # dropdown desa

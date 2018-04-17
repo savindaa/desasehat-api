@@ -27,8 +27,8 @@ gem 'bcrypt', '~> 3.1.7'
 # Use JWT for login
 gem 'jwt', '~> 2.1'
 
-# Use Active Admin as dashboard
-gem 'activeadmin'
+# Use Forest as admin panel
+gem 'forest_liana'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
