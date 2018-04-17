@@ -1,6 +1,6 @@
 class ProfileController < ApplicationController
 
-  skip_ before_action :authorize_request
+  skip_before_action :authorize_request
   before_action :find_user
 
   def show
