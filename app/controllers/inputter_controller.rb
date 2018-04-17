@@ -65,7 +65,21 @@ class InputterController < ApplicationController
   end
 
   def patient_params
-    params.require(:inputter).permit(:title, :name, :address, :phone, :pob, :dob, :gender, :blood_type, :description, :fund_goal, :period, :disease_type_id, picture: [])
+    params.require(:inputter).permit(
+      :title,
+      :name, 
+      :address,
+      :phone,
+      :pob,
+      :dob,
+      :gender,
+      :blood_type,
+      :description,
+      :fund_goal,
+      :period,
+      :disease_type_id, 
+      picture: []
+      )
   end
 
 end

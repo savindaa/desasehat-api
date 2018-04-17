@@ -37,7 +37,8 @@ class DonationsController < ApplicationController
   def send_notification(id, phone, amount, exp_time)
     userkey = ENV["ZENZIVA_USERKEY"]
     passkey = ENV["ZENZIVA_PASSKEY"]
-    link = "https://reguler.zenziva.net/apps/smsapi.php?userkey=#{userkey}&passkey=#{passkey}&nohp=#{phone}&pesan=Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{}%0A%0A"
+    link = "https://reguler.zenziva.net/apps/smsapi.php?userkey=#{userkey}&passkey=#{passkey}&nohp=#{phone}&pesan="
+            +"DESASEHAT%3A%20Segera%20transfer%20TEPAT%20Rp%20#{amount}%20ke%20rek%20BRI%206860989834%20an.%20YAYASAN%20DESASEHAT%20utk%20donasi%20##{id}%20sebelum%20#{exp_time}%0D%0Akonfirmasi%20transfer%20ke%20088xxx"
     @req = URI.parse(link).read
   end
 
