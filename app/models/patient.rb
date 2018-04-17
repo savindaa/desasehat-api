@@ -4,6 +4,7 @@ class Patient < ApplicationRecord
   has_one :patient_message  
 
   has_many :patient_pictures, dependent: :destroy
+  has_many :donations
 
   belongs_to :village
   belongs_to :disease_type
@@ -50,7 +51,6 @@ class Patient < ApplicationRecord
 
   def village_id
     {
-      id: self.village.id,
       kelurahan: self.village.kelurahan,
       kecamatan: self.village.kecamatan,
       kabupaten: self.village.kabupaten,
@@ -76,5 +76,17 @@ class Patient < ApplicationRecord
       name: self.validator.name,
       picture: self.validator.picture
     } unless self.validator.blank?
+  end
+
+  def donation_status
+    if self[:validated_at].blank? || self[:period].blank?
+      return "Inactive"
+    else
+      if self[:validated_at] + self[:period] > Date.today
+        return "Active"        
+      else
+        return "Inactive"                
+      end
+    end
   end
 end
