@@ -9,7 +9,9 @@ class InputterController < ApplicationController
 
   def create_patient
     patient = @current_user.inputs.new(patient_params.except(:picture))
-    raise(ExceptionHandler::StatementInvalid, Message.max_upload(3)) if patient_params[:picture].size > 3
+    patient_params[:picture].blank? ? pict = [] : pict = patient_params[:picture]
+    puts patient_params[:picture]
+    raise(ExceptionHandler::StatementInvalid, Message.max_upload(3)) if pict.size > 3
     patient.village_id = @current_user.village_id
     patient.status = "pending"
     if patient.save
