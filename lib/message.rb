@@ -50,4 +50,8 @@ class Message
   def self.article_accepted
     "Tidak bisa edit artikel yang sudah diverifikasi."
   end
+
+  def self.exp_donation
+    "Tidak bisa donasi ke campaign dengan status tidak aktif."
+  end
 end

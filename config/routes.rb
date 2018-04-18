@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  namespace :forest do
+    post '/actions/accept-article' => 'artikel#accept_article'
+    post '/actions/decline-article' => 'artikel#decline_article'
+    post '/actions/tambah-donasi' => 'campaign#tambah_donasi'
+  end
+  
+  mount ForestLiana::Engine => '/forest'
   root "patients#patients_list"
 
   # dropdown desa
@@ -20,7 +27,10 @@ Rails.application.routes.draw do
   # campaign API
   get "/pasien", to: "patients#patients_list"
   get "/pasien/:id", to: "patients#patient_detail"
-
+  
+  # donations API
+  post "/pasien/:id/donasi", to: "donations#create"
+  get "/metode-pembayaran", to: "donations#list_payment"
 
   # Logged in user action
 
@@ -31,6 +41,11 @@ Rails.application.routes.draw do
   post "user/login", to: "otp_auth#login"
   post "user/verify", to: "otp_auth#verify_otp"
   post "user/resend", to: "otp_auth#resend_otp"
+
+  get "user/profile/:id", to: "profile#show"
+  put "user/profile/:id", to: "profile#update"
+  get "user/profile/:id/wewenang", to: "profile#privileges"
+  
 
   # admin desa API
   get "user/admindesa/list-user", to: "admin_desa#list_users"
@@ -57,20 +72,4 @@ Rails.application.routes.draw do
   get "user/validator/list-validasi-campaignku", to: "validator#my_validated_patient"
 
 
-  # CMS
-  post "admin/login", to: "authentication#authenticate_admin"
-  resources :medical_facilities, path: "admin/fasilitas-kesehatan"
-  resources :medical_personnels, path: "admin/tenaga-kesehatan"
-  resources :posts, path: "admin/artikel"
-  resources :users, path: "admin/user"
-  resources :desa, path: "admin/desa"
-  resources :kecamatan, path: "admin/kecamatan"
-  resources :kabupaten, path: "admin/kabupaten"
-  resources :provinsi, path: "admin/provinsi"
-  resources :disease_types, path: "admin/jenis-penyakit"
-  resources :privileges, path: "admin/wewenang"
-  resources :tags, path: "admin/kategori-artikel"
-  resources :total_residents, path: "admin/jumlah-penduduk"
-  
-  
 end
