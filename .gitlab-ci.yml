@@ -22,7 +22,7 @@ build:
   - apt-get update && apt install -y -qq nodejs
   - gem install bundler  --no-ri --no-rdoc
   - gem install execjs
-  - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
+  # - RAILS_ENV=test bundle install --jobs $(nproc) "${FLAGS[@]}"
   # - bundle exec rake db:create db:schema:load
   - bundle exec rake db:migrate
   - bundle exec rake db:seed
