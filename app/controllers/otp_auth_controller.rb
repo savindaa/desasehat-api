@@ -61,9 +61,11 @@ class OtpAuthController < ApplicationController
   end
 
   def send_otp(phone, otp)
-    userkey = ENV["ZENZIVA_USERKEY"]
-    passkey = ENV["ZENZIVA_PASSKEY"]
-    link = "https://reguler.zenziva.net/apps/smsapi.php?userkey=#{userkey}&passkey=#{passkey}&nohp=#{phone}&pesan=Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}%0A%0A"
+    userkey = ENV["SMSGATEWAY_USERKEY"]
+    passkey = ENV["SMSGATEWAY_PASSKEY"]
+    device_id = ENV["SMSGATEWAY_DEVICE_ID"]
+    link = "http://smsgateway.me/api/v3/messages/send?email=#{userkey}&password=#{passkey}&device=#{device_id}&number=#{phone}&message="+
+           "&pesan=Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}%0A%0A"
     @req = URI.parse(link).read
   end
 

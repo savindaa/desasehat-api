@@ -6,9 +6,11 @@ class PatientsController < ApplicationController
     if params[:search]
       patients = Patient.where(status: "accepted")
                         .where('lower(title) LIKE ?', "%#{params[:search].downcase}%")
+                        .order(updated_at: :desc)
                         .paginate(page: params[:page], per_page: params[:limit] || 10)      
     else
       patients = Patient.where(status: "accepted")
+                        .order(updated_at: :desc)
                         .paginate(page: params[:page], per_page: params[:limit] || 10)
     end
     render json: patients, 

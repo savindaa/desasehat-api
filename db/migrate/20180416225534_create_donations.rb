@@ -5,13 +5,14 @@ class CreateDonations < ActiveRecord::Migration[5.1]
       t.string :name
       t.bigint :amount
       t.integer :unique_code
-      t.string :payment_options
+      t.bigint :payment_option_id
       t.text :comment
       t.references :patient, foreign_key: true
       t.integer :status
 
       t.timestamps
     end
+    add_index("donations", "payment_option_id")
     execute("ALTER SEQUENCE donations_id_seq RESTART 10000;")
   end
 

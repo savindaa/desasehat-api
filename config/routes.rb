@@ -23,8 +23,7 @@ Rails.application.routes.draw do
   
   # donations API
   post "/pasien/:id/donasi", to: "donations#create"
-  put "/donasi/:id", to: "donations#update"
-  get "/donasi/:id", to: "donations#show"
+  get "/metode-pembayaran", to: "donations#list_payment"
 
   # Logged in user action
 

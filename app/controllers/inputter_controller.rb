@@ -28,7 +28,7 @@ class InputterController < ApplicationController
   end
 
   def my_inputted_patient
-    patients = @current_user.inputs.where.not(status: "cured").
+    patients = @current_user.inputs.where.not(status: "finished").
                             paginate(page: params[:page], per_page: params[:limit] || 10).
                             order(updated_at: :desc)
     render json: patients, 
@@ -38,14 +38,14 @@ class InputterController < ApplicationController
 
   def delete_patient
     patient = @current_user.inputs.find(params[:id])
-    raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "cured")
+    raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "finished")
     patient.destroy
     head :no_content
   end
 
   def update_patient
     patient = @current_user.inputs.find(params[:id])
-    raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "cured")    
+    raise(ExceptionHandler::StatementInvalid, Message.patient_accepted) if (patient.status == "accepted") || (patient.status == "finished")    
     if patient.update!(patient_params.except(:picture))
       unless patient_params[:picture].blank?
         patient.patient_pictures.destroy_all

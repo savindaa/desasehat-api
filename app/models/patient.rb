@@ -16,7 +16,7 @@ class Patient < ApplicationRecord
   validates :name, :dob, :gender, :status, :blood_type, presence: true
 
   # enum on status
-  enum status: [ :pending, :accepted, :declined, :cured ]
+  enum status: [ :pending, :accepted, :declined, :finished ]
 
   attribute :age
 
