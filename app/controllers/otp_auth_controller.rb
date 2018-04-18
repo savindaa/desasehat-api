@@ -25,9 +25,8 @@ class OtpAuthController < ApplicationController
       # store otp result to db
       user.verification ? user.verification.update(code: otp) : user.verification = Verification.new(code: otp)
       send_otp(user.phone, otp)
-      privileges = user.privileges.as_json(only: [:id, :name, :su_only])
       # return user name if the record exist
-      render json: { user: { id: user.id, name: user.name, phone: user.phone }, user_privileges: privileges }, status: :ok
+      render json: { user: { id: user.id, name: user.name, phone: user.phone } }, status: :ok
     else
     # raise Authentication error if credentials are invalid
     raise(ExceptionHandler::AuthenticationError, Message.user_not_found)
@@ -48,7 +47,8 @@ class OtpAuthController < ApplicationController
     raise(ExceptionHandler::StatementInvalid, "Tidak ada kode OTP.") if user.verification.blank?
     if user.verification[:code] == auth_params[:otp]
       auth_token = JsonWebToken.encode({ user_id: user.id }, 10.years.from_now)
-      render json: { auth_token: auth_token }
+      privileges = user.privileges.as_json(only: [:id, :name, :su_only])
+      render json: { auth_token: auth_token, user: user, user_privileges: privileges }
       user.verification.destroy
     else
       raise(ExceptionHandler::AuthenticationError, Message.otp_not_match)
