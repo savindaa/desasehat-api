@@ -48,7 +48,7 @@ class DonationsController < ApplicationController
             "DESASEHAT%3A%20Segera%20transfer%20Rp%20#{amount}%20ke%20#{payment_option.name}%20#{payment_option.account_number}%20an."+
             "%20YAYASAN%20DESASEHAT%20/u%20donasi%20##{id}%20sblm%20#{exp_time}%0D%0Akonfirmasi%20transfer%20ke%20082213451346"
     @req = URI.parse(link).read
-    puts link
+    rescue OpenURI::HTTPError
   end
 
 end
