@@ -16,7 +16,7 @@ class Patient < ApplicationRecord
   validates :name, :dob, :gender, :status, :blood_type, presence: true
 
   # enum on status
-  enum status: [ :pending, :accepted, :declined, :cured ]
+  enum status: [ :pending, :accepted, :declined, :finished ]
 
   attribute :age
 
@@ -33,7 +33,7 @@ class Patient < ApplicationRecord
         pict.picture
       end
     else
-      { url: PictureUploader.default_url }
+      nil
     end
   end
 
@@ -41,7 +41,7 @@ class Patient < ApplicationRecord
     if !self.patient_pictures.blank?
       self.patient_pictures.first.picture
     else
-      { url: PictureUploader.default_url }
+      nil
     end
   end
 
@@ -89,4 +89,19 @@ class Patient < ApplicationRecord
       end
     end
   end
+
+  def period
+    if self[:validated_at].blank? || self[:period].blank?
+      return 0
+    else
+      days_left = (self[:validated_at] + self[:period]) - Date.today
+      days_left = 0 if (days_left < 0)
+      return days_left.to_i
+    end
+  end
+
+  def fund_current
+    return self[:fund_current].blank? ? 0 : self[:fund_current]
+  end
+
 end
