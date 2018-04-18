@@ -30,8 +30,8 @@ class User < ApplicationRecord
     self.privileges.as_json(only: [:id, :name])
   end
 
-  def picture
-    { url: PictureUploader.default_url } if self[:picture].blank?
-  end
+  # def picture
+  #   { url: PictureUploader.default_url } if self[:picture].blank?
+  # end
 
 end
