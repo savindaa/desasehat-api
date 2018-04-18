@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
   get "user/profile/:id", to: "profile#show"
   put "user/profile/:id", to: "profile#update"
-  get "user/profile/:id/privileges", to: "profile#privileges"
+  get "user/profile/:id/wewenang", to: "profile#privileges"
   
 
   # admin desa API
