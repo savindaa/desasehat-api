@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :forest do
     post '/actions/accept-article' => 'artikel#accept_article'
     post '/actions/decline-article' => 'artikel#decline_article'
+    post '/actions/tambah-donasi' => 'campaign#tambah_donasi'
   end
   
   mount ForestLiana::Engine => '/forest'

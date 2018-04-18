@@ -5,8 +5,6 @@ class Forest::Article
       
     action 'Accept Article'
     action 'Decline Article'
-    
-    segment 'Pending' do
-  end
+
     
 end

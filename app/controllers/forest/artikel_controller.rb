@@ -12,6 +12,6 @@ class Forest::ArtikelController < ForestLiana::ApplicationController
 	  article_id.map do |article| 
 	  Article.update(article, status: "declined")
 	  end
-	  render json: {error: "Artikel ditolak."}
+	  render json: {success: "Artikel ditolak."}
   end
 end
