@@ -4,16 +4,14 @@ class Forest::ArtikelController < ForestLiana::ApplicationController
     article_id.map do |article| 
     Article.update(article, status: "accepted")
     end
-    render json: { success: "Artikel telah divalidasi."}
+    render json: {success: "Artikel telah divalidasi."}
   end
 
   def decline_article
-	article_id = params.dig('data', 'attributes', 'ids')
-	article_id.map do |article| 
-	Article.update(article, status: "declined")
-	end
-	render json: { success: "Artikel ditolak."}
+	  article_id = params.dig('data', 'attributes', 'ids')
+	  article_id.map do |article| 
+	  Article.update(article, status: "declined")
+	  end
+	  render json: {error: "Artikel ditolak."}
   end
-    
-
 end
