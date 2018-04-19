@@ -34,7 +34,7 @@ class InputterController < ApplicationController
                             paginate(page: params[:page], per_page: params[:limit] || 10).
                             order(updated_at: :desc)
     render json: patients, 
-           only: [:id, :name, :title, :age, :village_id, :status], 
+           only: [:id, :name, :age, :village_id, :status], 
            methods: [ :disease, :picture ], status: :ok
   end
 
