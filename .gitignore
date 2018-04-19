@@ -9,6 +9,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/.vscode
 /tmp/*
 !/log/.keep
 !/tmp/.keep

@@ -3,13 +3,10 @@ class CreateUsers < ActiveRecord::Migration[5.1]
     create_table :users do |t|
       t.string :phone, null: false
       t.string :name, null: false
-      t.string :gender
       t.text :address
-      t.string :pob
-      t.date :dob
-      t.string :email
-      t.string :occupation
       t.string :picture
+      t.text :bio
+      t.text :weblink
       t.references :village, foreign_key: true
 
       t.timestamps

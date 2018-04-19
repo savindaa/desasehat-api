@@ -9,12 +9,12 @@ class VillagesController < ApplicationController
         regency = province.regencies.find(params[:kab])
         if !params[:kec].blank?
           subdistricts = regency.subdistricts.find(params[:kec])
-          render json: subdistricts.villages, only: [:id, :kelurahan], status: :ok
+          render json: subdistricts.villages, only: [:id, :kelurahan, :subdistrict_id], status: :ok
         else
-          render json: regency.subdistricts, only: [:id, :kecamatan], status: :ok
+          render json: regency.subdistricts, only: [:id, :kecamatan, :regency_id], status: :ok
         end
       else
-        render json: province.regencies, only: [:id, :kabupaten], status: :ok
+        render json: province.regencies, only: [:id, :kabupaten, :province_id], status: :ok
       end
     else
       render json: Province.all, only: [:id, :provinsi], status: :ok
@@ -23,10 +23,14 @@ class VillagesController < ApplicationController
 
   def village_statistic
     @date_log = Date.new( date_year, date_month ).end_of_month
-    patients = Patient.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).where(status: "accepted")
+    patients = Patient.where("village_id = ?", params[:id])
+                      .where("created_at <= ?", @date_log)
+                      .where(status: "accepted")
+    
     unless patients.blank?
       log = {
         village_detail: patients.first.village_id,
+        admin_desa: admin_desa,
         date: "#{I18n.l(@date_log, format: :short)}",
         total_resident: total_resident,
         total_sick_residents: patients.size,
@@ -85,8 +89,17 @@ class VillagesController < ApplicationController
   end
 
   def total_resident
-    people_count = TotalResident.where("village_id = ?", params[:id]).where("created_at <= ?", @date_log).last
+    people_count = TotalResident.where("village_id = ?", params[:id])
+                                .where("created_at <= ?", @date_log)
+                                .last
     people_count.blank? ? 0 : people_count.total
+  end
+
+  def admin_desa
+    admin_desa = Privilege.find(1).users
+                          .where("village_id = ?", params[:id])
+                          .first
+    admin_desa.blank? ? nil : { name: admin_desa.name, phone: admin_desa.phone }
   end
 
 end

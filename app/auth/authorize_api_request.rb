@@ -15,10 +15,9 @@ class AuthorizeApiRequest
   attr_reader :headers
 
   def user
-    # check if admin/user is in the database
-    # memoize admin/user object
-    @user ||= Admin.find(decoded_auth_token[:admin_id]) if decoded_auth_token[:admin_id]
-    @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token[:user_id]
+    # check if user is in the database
+    # memoize user object
+    @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token
     return @user
     # handle user not found
   rescue ActiveRecord::RecordNotFound => e

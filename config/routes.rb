@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  namespace :forest do
+    post '/actions/accept-article' => 'artikel#accept_article'
+    post '/actions/decline-article' => 'artikel#decline_article'
+    post '/actions/tambah-donasi' => 'campaign#tambah_donasi'
+  end
+  
+  mount ForestLiana::Engine => '/forest'
   root "patients#patients_list"
 
   # dropdown desa
@@ -8,7 +15,7 @@ Rails.application.routes.draw do
   get "/desa/dropdown/:prov/:kab", to: "villages#village_dropdown"
   get "/desa/dropdown/:prov/:kab/:kec", to: "villages#village_dropdown"
 
-  get "/desa/statistik/:id", to: "villages#village_statistic"  
+  get "/desa/statistik/:id", to: "villages#village_statistic"
 
   # edukasi API
   get "/edukasi", to: "articles#list"
@@ -20,7 +27,10 @@ Rails.application.routes.draw do
   # campaign API
   get "/pasien", to: "patients#patients_list"
   get "/pasien/:id", to: "patients#patient_detail"
-
+  
+  # donations API
+  post "/pasien/:id/donasi", to: "donations#create"
+  get "/metode-pembayaran", to: "donations#list_payment"
 
   # Logged in user action
 
@@ -32,17 +42,23 @@ Rails.application.routes.draw do
   post "user/verify", to: "otp_auth#verify_otp"
   post "user/resend", to: "otp_auth#resend_otp"
 
+  get "user/profile/:id", to: "profile#show"
+  put "user/profile/:id", to: "profile#update"
+  get "user/profile/:id/wewenang", to: "profile#privileges"
+  
+
   # admin desa API
   get "user/admindesa/list-user", to: "admin_desa#list_users"
   get "user/admindesa/list-user/:id", to: "admin_desa#detail_user"
   get "user/admindesa/list-wewenang", to: "admin_desa#privileges_list"
   put "user/admindesa/update-wewenang/:id", to: "admin_desa#update_privileges"
 
-  # article creator API  post "admin/login", to: "authentication#authenticate_admin"
+  # article creator API 
   get "user/creator/list-kategori", to: "article_creator#tags_list"
   post "user/creator/artikel-baru", to: "article_creator#create_article"
   get "user/creator/artikelku", to: "article_creator#my_articles"
-  delete "user/creator/hapus-artikel", to: "article_creator#delete_article"
+  delete "user/creator/hapus-artikel/:id", to: "article_creator#delete_article"
+  put "user/creator/edit-artikel/:id", to: "article_creator#edit_article"
 
   # campaign inputter API
   get "user/inputter/list-penyakit", to: "inputter#list_disease"
@@ -55,8 +71,5 @@ Rails.application.routes.draw do
   get "user/validator/tolak-campaign/:id", to: "validator#decline_patient"
   get "user/validator/list-validasi-campaignku", to: "validator#my_validated_patient"
 
-
-  # CMS
-  post "admin/login", to: "authentication#authenticate_admin"
 
 end

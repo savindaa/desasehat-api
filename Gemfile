@@ -27,11 +27,14 @@ gem 'bcrypt', '~> 3.1.7'
 # Use JWT for login
 gem 'jwt', '~> 2.1'
 
+# Use Forest as admin panel
+gem 'forest_liana'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 # Use Carrierwave for upload image
 gem 'carrierwave-base64', '~> 2.6', '>= 2.6.1'
@@ -68,3 +71,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'whenever', require: false

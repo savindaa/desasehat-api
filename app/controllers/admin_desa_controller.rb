@@ -3,13 +3,15 @@ class AdminDesaController < ApplicationController
   before_action :admin_desa?
 
   def list_users
-   users = User.where(village_id: @current_user.village_id)
+   users = User.where(village_id: @current_user.village_id).
+                paginate(page: params[:page], per_page: params[:limit] || 10).
+                order(:name)
    render json: users, only: [:id, :name, :phone, :picture], status: :ok
   end
 
   def detail_user
-   user = User.find(params[:id])
-   render json: user, methods: :user_privileges, status: :ok
+    user = User.find(params[:id])
+    render json: user, methods: :user_privileges, status: :ok
   end
 
   def privileges_list
@@ -29,7 +31,8 @@ class AdminDesaController < ApplicationController
           user.privileges << privilege if user.privileges.find_by(id: data[:id]).blank?
         end
       end
-      user.privileges.where.not(id: current, su_only: true).map { |d| user.privileges.delete(d.id) } unless user.privileges.where.not(id: current, su_only: true).blank?
+      current_privilege = user.privileges.where.not(id: current, su_only: true)
+      current_privilege.map { |d| user.privileges.delete(d.id) } unless current_privilege.blank?
     else
       raise(ExceptionHandler::AuthenticationError, Message.beyond_privilege)
     end

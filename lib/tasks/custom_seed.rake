@@ -12,7 +12,7 @@ end
 
 desc "Run all files in db/seeds directory"
  namespace :db do
-   task seeds: :environment do
+   task :seeds => :environment do
      Dir[File.join(Rails.root, 'db', 'seeds', '*.rb')].each do |filename|
        task_name = File.basename(filename, '.rb')
        puts "seeding - #{task_name}"
@@ -20,3 +20,21 @@ desc "Run all files in db/seeds directory"
      end
    end
  end
+
+desc "Update status campaign to finished"
+  namespace :task do
+    task :campaign => :environment do
+      puts "**********"
+      puts "Data Campaign Selesai || Tanggal #{DateTime.now}"
+      campaign = Patient.where(status: "accepted")
+      campaign.map do |patient|
+          if !patient.validated_at.blank? || !patient.period.blank?
+            if patient.period == 0 
+              patient.update(status: "finished")
+              puts patient.name
+            end
+          end
+      end
+      puts "**********"
+    end
+  end

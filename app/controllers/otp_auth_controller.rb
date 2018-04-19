@@ -35,7 +35,8 @@ class OtpAuthController < ApplicationController
 
   # POST user/resend
   def resend_otp
-    user = User.find_by(phone: auth_params[:phone])
+    user = User.find_by!(phone: auth_params[:phone])
+    raise(ExceptionHandler::StatementInvalid, "Tidak ada kode OTP.") if user.verification.blank?
     send_otp(user.phone, user.verification.code)
     render json: { message: "Kode telah dikirim ulang." }, status: :ok
   end
@@ -43,9 +44,11 @@ class OtpAuthController < ApplicationController
   # POST user/verify
   def verify_otp
     user = User.find(auth_params[:id])
+    raise(ExceptionHandler::StatementInvalid, "Tidak ada kode OTP.") if user.verification.blank?
     if user.verification[:code] == auth_params[:otp]
       auth_token = JsonWebToken.encode({ user_id: user.id }, 10.years.from_now)
-      render json: { auth_token: auth_token }
+      privileges = user.privileges.as_json(only: [:id, :name, :su_only])
+      render json: { auth_token: auth_token, user: user, user_privileges: privileges }
       user.verification.destroy
     else
       raise(ExceptionHandler::AuthenticationError, Message.otp_not_match)
@@ -54,14 +57,17 @@ class OtpAuthController < ApplicationController
   private
 
   def auth_params
-    params.require(:otp_auth).permit(:phone, :id, :otp, :name, :gender, :address, :pob, :dob, :email, :occupation, :village_id)
+    params.require(:otp_auth).permit(:phone, :id, :otp, :name, :address, :village_id)
   end
 
   def send_otp(phone, otp)
-    userkey = ENV["ZENZIVA_USERKEY"]
-    passkey = ENV["ZENZIVA_PASSKEY"]
-    link = "https://reguler.zenziva.net/apps/smsapi.php?userkey=#{userkey}&passkey=#{passkey}&nohp=#{phone}&pesan=Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}%0A%0A"
+    userkey = ENV["SMSGATEWAY_USERKEY"]
+    passkey = ENV["SMSGATEWAY_PASSKEY"]
+    device_id = ENV["SMSGATEWAY_DEVICE_ID"]
+    link = "http://smsgateway.me/api/v3/messages/send?email=#{userkey}&password=#{passkey}&device=#{device_id}&number=#{phone}&message="+
+           "Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}"
     @req = URI.parse(link).read
+  rescue OpenURI::HTTPError
   end
 
 end
