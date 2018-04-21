@@ -65,7 +65,7 @@ class OtpAuthController < ApplicationController
     passkey = ENV["SMSGATEWAY_PASSKEY"]
     device_id = ENV["SMSGATEWAY_DEVICE_ID"]
     link = "http://smsgateway.me/api/v3/messages/send?email=#{userkey}&password=#{passkey}&device=#{device_id}&number=#{phone}&message="+
-           "Silahkan%20masukan%20kode%20berikut%20ke%20aplikasi%20Desasehat%0A%0A#{otp}"
+           "#{otp}%0AAdalah%20Kode%20Untuk%20Masuk%20ke%20Aplikasi%20Desa%20Sehat"
     @req = URI.parse(link).read
   rescue OpenURI::HTTPError
   end
