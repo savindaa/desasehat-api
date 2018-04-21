@@ -73,3 +73,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'whenever', require: false
+
+gem 'google-api-client', '~> 0.8.6'
+gem "mime-types"
+gem 'fog'

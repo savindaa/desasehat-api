@@ -31,7 +31,7 @@ class Article < ApplicationRecord
 
   def pictures
     if self[:picture].blank?
-      { url: PictureUploader.default_url } 
+      { url: nil } 
     else
       { url: self.picture.url } 
     end

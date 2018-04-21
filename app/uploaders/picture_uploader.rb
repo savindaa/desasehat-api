@@ -3,7 +3,7 @@ class PictureUploader < CarrierWave::Uploader::Base
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
   # Choose what kind of storage to use for this uploader:
-  storage :file
+  storage :fog
   # storage :fog
 
   # Override the directory where uploaded files will be stored.
@@ -12,9 +12,9 @@ class PictureUploader < CarrierWave::Uploader::Base
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  def asset_host
-    ENV['IMAGE_HOST']
-  end
+  # def asset_host
+  #   ENV['IMAGE_HOST']
+  # end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url(*args)
@@ -24,9 +24,9 @@ class PictureUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
-  def self.default_url
-    ENV['IMAGE_HOST']+"/uploads/default/picture.png"
-  end
+  # def self.default_url
+  #   ENV['IMAGE_HOST']+"/uploads/default/picture.png"
+  # end
 
   # Process files as they are uploaded:
   # process scale: [200, 300]
