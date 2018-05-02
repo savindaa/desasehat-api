@@ -19,4 +19,8 @@ Rails.application.routes.draw do
 
   post "user/verify", to: "otp_auth#verify_otp"
 
+  get "desa/:id/penduduk", to: "residents#show"
+
+  get "desa/:id/penduduk/update", to: "residents#update_log"
+
 end
